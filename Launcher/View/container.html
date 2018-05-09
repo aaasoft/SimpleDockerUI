@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Container Manage</title>
+    <link rel="stylesheet" href="/Launcher/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/Launcher/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/Launcher/Resource/require.js-2.3.5/require.js"></script>
+    <script src="/Launcher/Resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/Launcher/Resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/Launcher/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+</head>
+
+<body>
+</body>
+
+</html>
+<script type="text/javascript">
+    require([
+        "/Launcher/Resource/ext-store/Docker.Container.js"
+    ], function () {
+        //视图
+        var viewport = Ext.create('Ext.container.Viewport', {
+            xtype: 'container',
+            layout: 'fit',
+            items: {
+                xtype: 'grid',
+                //selType: 'checkboxmodel',
+                store: 'Docker.Container',
+                dockedItems: [
+                    {
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [
+                            {
+                                xtype: 'button',
+                                glyph: 'xf021@FontAwesome',
+                                text: 'Refresh',
+                                handler: function () {
+                                    refreshModel();
+                                }
+                            },
+                            '-',
+                            {
+                                xtype: 'button',
+                                glyph: 'xf067@FontAwesome',
+                                text: 'Add',
+                                disabled: true,
+                                handler: function () {
+                                    addModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnEdit',
+                                xtype: 'button',
+                                glyph: 'xf044@FontAwesome',
+                                text: 'Edit',
+                                disabled: true,
+                                handler: function () {
+                                    editModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnDelete',
+                                xtype: 'button',
+                                glyph: 'xf00d@FontAwesome',
+                                text: 'Delete',
+                                disabled: true,
+                                handler: function () {
+                                    deleteModel();
+                                }
+                            },
+                            '-',
+                            {
+                                itemId: 'btnStart',
+                                xtype: 'button',
+                                glyph: 'xf04b@FontAwesome',
+                                text: 'Start',
+                                disabled: true,
+                                handler: function () {
+                                    startModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnStop',
+                                xtype: 'button',
+                                glyph: 'xf04d@FontAwesome',
+                                text: 'Stop',
+                                disabled: true,
+                                handler: function () {
+                                    stopModel();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                columns: [
+                    {
+                        text: 'Id',
+                        sortable: true,
+                        dataIndex: 'Id',
+                        hidden: true,
+                        flex: 1
+                    },
+                    {
+                        text: 'Name',
+                        sortable: true,
+                        dataIndex: 'Name',
+                        flex: 1
+                    },
+                    {
+                        text: 'Image',
+                        sortable: true,
+                        dataIndex: 'Image',
+                        flex: 1
+                    },
+                    {
+                        text: 'Command',
+                        sortable: true,
+                        dataIndex: 'Command',
+                        flex: 1
+                    },
+                    {
+                        text: 'Port',
+                        sortable: true,
+                        dataIndex: 'Port',
+                        flex: 1
+                    },
+                    {
+                        text: 'Status',
+                        sortable: false,
+                        dataIndex: 'Status',
+                        flex: 1
+                    },
+                    {
+                        text: 'Created',
+                        sortable: true,
+                        dataIndex: 'Created',
+                        renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
+                        flex: 1
+                    }
+                ],
+                listeners: {
+                    selectionchange: function (sender, selected, eOpts) {
+                        if (selected == null
+                            || selected.length == 0) {
+                            viewport.down('#btnStart').setDisabled(true);
+                            viewport.down('#btnStop').setDisabled(true);
+                        } else {
+                            viewport.down('#btnStart').setDisabled(selected.length != 1);
+                            viewport.down('#btnStop').setDisabled(selected.length != 1);
+                        }
+                    }
+                }
+            }
+        });
+
+        //刷新数据
+        function refreshModel() {
+            var store = Ext.data.StoreManager.lookup('Docker.Container');
+            store.reload();
+        }
+        refreshModel();
+
+        function addOrUpdate(param) {
+            Ext.create('Ext.window.Window', {
+                height: 300,
+                width: 400,
+                layout: 'fit',
+                title: param.title,
+                modal: true,
+                items: {
+                    xtype: 'form',
+                    url: param.url,
+                    frame: false,
+                    layout: 'anchor',
+                    border: false,
+                    bodyPadding: 10,
+                    autoScroll: true,
+                    fieldDefaults: {
+                        labelAlign: 'top',
+                        labelWidth: 100,
+                        labelStyle: 'font-weight:bold'
+                    },
+                    defaults: {
+                        xtype: 'textfield',
+                        allowBlank: false,
+                        anchor: '100%',
+                        margins: '0 0 10 0'
+                    },
+                    items: [
+                        {
+                            xtype: 'hiddenfield',
+                            name: 'Id',
+                            value: param.data ? param.data.Id : null
+                        },
+                        {
+                            fieldLabel: '名称',
+                            name: 'Name',
+                            value: param.data ? param.data.Name : null
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: '类型',
+                            name: 'Type',
+                            valueField: 'Id',
+                            displayField: 'Name',
+                            editable: false,
+                            store: {
+                                xtype: 'store.array',
+                                fields: [{ name: 'Id' }, { name: 'Name' }],
+                                data: [[1, '管理员'], [2, '普通用户']]
+                            },
+                            value: param.data ? param.data.Type : null
+                        },
+                        {
+                            fieldLabel: '描述',
+                            name: 'Description',
+                            allowBlank: true,
+                            value: param.data ? param.data.Description : null
+                        }
+                    ],
+                    buttons: [{
+                        text: '确定',
+                        handler: function () {
+                            var win = this.up('window');
+                            var form = this.up('form').getForm();
+                            if (form.isValid()) {
+                                viewport.setLoading({
+                                    msg: '保存中...'
+                                });
+                                form.submit({
+                                    success: function (form, action) {
+                                        viewport.setLoading(false);
+                                        Ext.Msg.alert('成功', action.result.message);
+                                        win.close();
+                                        viewport.down('grid').getStore().reload();
+                                    },
+                                    failure: function (form, action) {
+                                        viewport.setLoading(false);
+                                        Ext.Msg.alert('失败', action.result ? action.result.message : '未响应');
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: '取消',
+                        handler: function () {
+                            this.up('window').close();
+                        }
+                    }]
+                }
+            }).show();
+        }
+
+        function addModel() {
+            addOrUpdate({
+                title: '添加',
+                url: '/api/Plugin.Base/Roles/Add',
+                isAdd: true
+            });
+        }
+
+        function editModel() {
+            addOrUpdate({
+                title: '编辑',
+                url: '/api/Plugin.Base/Roles/Edit',
+                isAdd: false,
+                data: viewport.down('grid').getSelectionModel().getLastSelected().data
+            });
+        }
+
+
+        function getSelectedIds() {
+            var ids = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                ids.push(record.get('Id'));
+            });
+            return ids;
+        }
+
+        function getSelectedNames() {
+            var names = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                names.push(record.get('Name'));
+            });
+            return names;
+        }
+
+        function deleteModel() {
+            Ext.Msg.confirm('确认删除', '确认要删除角色[' + getSelectedNames().join(',') + ']？', function (id) {
+                if (id != 'yes')
+                    return;
+                viewport.setLoading({
+                    msg: '删除中...'
+                });
+                $.post('/api/Plugin.Base/Roles/Delete', { Ids: getSelectedIds().join(',') }, function (ret) {
+                    if (ret.code != 0) {
+                        Ext.Msg.alert('失败', ret.message);
+                        viewport.setLoading(false);
+                        return;
+                    }
+                    viewport.down('pagingtoolbar').moveFirst();
+                    Ext.Msg.alert('成功', "删除成功！");
+                    viewport.setLoading(false);
+                });
+            });
+        }
+
+        function startModel(){
+            $.post('/Launcher/Api/Container/Start',{
+                Id:getSelectedIds()[0]
+            },function(ret){
+                if(ret.code!=0){
+                    Ext.Msg.alert('Failed',ret.message);
+                    return;
+                }
+                refreshModel();
+                Ext.Msg.alert('Success','Start successed.');
+            });
+        }
+
+        function stopModel(){
+            $.post('/Launcher/Api/Container/Stop',{
+                Id:getSelectedIds()[0]
+            },function(ret){
+                if(ret.code!=0){
+                    Ext.Msg.alert('Failed',ret.message);
+                    return;
+                }
+                refreshModel();
+                Ext.Msg.alert('Success','Start successed.');
+            });
+        }
+    });
+</script>
