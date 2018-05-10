@@ -1,26 +1,34 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Quick.CoreMVC.Api;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Quick.CoreMVC;
 
 namespace Launcher.Middleware
 {
-    public class LoginMiddleware
+    public class ViewLoginMiddleware
     {
-        //原始正则表达式：^/(?'plugin'[^/]*?)/View/(?'path'.*)$
+        //原始正则表达式：^(/|/(?'plugin'[^/]*?)/View/(?'path'.*))$
         private Regex regex = new Regex(
-            "^/(?'plugin'[^/]*?)/View/(?'path'.*)$",
+            "^(/|/(?'plugin'[^/]*?)/View/(?'path'.*))$",
             //编译为程序集提高匹配速度
             RegexOptions.Compiled
             );
 
         private RequestDelegate _next;
-        public LoginMiddleware(RequestDelegate next = null)
+        public ViewLoginMiddleware(RequestDelegate next = null)
         {
             _next = next;
         }
+
+        private List<string> whiteList = new List<string>(new[]
+            {
+                "/Launcher/View/login.html"
+            }
+        );
 
         public Task Invoke(HttpContext context)
         {
@@ -31,17 +39,17 @@ namespace Launcher.Middleware
             if (!regex.IsMatch(path))
                 return _next.Invoke(context);
 
-            if(false)
+            var session = context.Session;
+            var isLogin = session.GetString("IsLogin");
+
+            if (string.IsNullOrEmpty(isLogin) && !whiteList.Contains(path))
             {
-                var session = context.Session;
-                session.SetString("test", Guid.NewGuid().ToString());
                 rep.ContentType = "text/html;charset=utf-8";
-                return rep.WriteAsync("请先登录！");
+                rep.Redirect("/Launcher/View/login.html");
+                return Task.Run(() => { });
             }
             else
-            {
                 return _next.Invoke(context);
-            }            
         }
     }
 }

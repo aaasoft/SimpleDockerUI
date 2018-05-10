@@ -34,25 +34,30 @@ namespace Launcher
             app.UseDeveloperExceptionPage();
 #if DEBUG
             loggerFactory.AddConsole();
-            //app.UseDeveloperExceptionPage();
 #endif
             //支持Session
             app.UseSession();
 
-            //支持登录控制
-            app.UseMiddleware<Launcher.Middleware.LoginMiddleware>();
+            //支持视图登录控制
+            app.UseMiddleware<Launcher.Middleware.ViewLoginMiddleware>();
 
             //支持静态文件
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory())
             });
+
+            //支持API登录控制
+            app.UseMiddleware<Launcher.Middleware.ApiLoginMiddleware>();
+
             //支持API中间件
             app.UseMiddleware<Quick.CoreMVC.Middleware.ApiMiddleware>(properties);
             app.Run(async (context) =>
             {
                 if (context.Request.Path == "/"){
-                    context.Response.Redirect("/Launcher/View/index.html");
+                    var rep = context.Response;
+                    rep.ContentType="text/html; charset=UTF-8";
+                    await rep.WriteAsync(File.ReadAllText("Launcher/View/index.html"));
                     return;
                 }
                 context.Response.StatusCode = 404;

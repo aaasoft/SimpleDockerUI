@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SimpleDockerUI</title>
+    <link rel="stylesheet" href="/Launcher/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/Launcher/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/Launcher/Resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/Launcher/Resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/Launcher/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+</head>
+
+<body>
+</body>
+
+</html>
+<script type="text/javascript">
+    var viewport = null;
+
+    var txtPassword = Ext.create('Ext.form.field.Text', {
+        allowBlank: false,
+        fieldLabel: 'Password',
+        name: 'password',
+        inputType: 'password'
+        , listeners: {
+            specialkey: function (field, e) {
+                if (e.getKey() == Ext.EventObject.ENTER) {
+                    login();
+                }
+            }
+        }
+    });
+
+    var loginForm = Ext.create('Ext.form.Panel', {
+        width: 366,
+        bodyPadding: 20,
+        border: false,
+        defaultType: 'textfield',
+        defaults: {
+            anchor: '100%'
+        },
+        items: [
+            {
+                xtype: 'component',
+                html: [
+                    '<h3>SimpleDockerUI</h3>'
+                ]
+            },
+            txtPassword
+        ],
+        buttons: [
+            {
+                text: 'Login',
+                handler: function () {
+                    login();
+                }
+            }
+        ]
+    });
+
+    Ext.onReady(function () {
+        viewport = Ext.create('Ext.container.Viewport', {
+            layout: {
+                type: 'vbox',
+                align: 'center',
+                pack: 'center'
+            },
+            items: {
+                xtype: 'panel',
+                border: false,
+                items: loginForm
+            }
+        });
+    });
+
+    function onBeforeLogin() {
+        viewport.setLoading({
+            msg: 'Logining...',
+            useTargetEl: true
+        });
+    }
+
+    function onAfterLogin() {
+        viewport.setLoading(false);
+    }
+
+    //当登录成功时
+    function onLoginSuccess() {
+        var searchObject = Ext.Object.fromQueryString(window.location.search);
+        if ("returnUrl" in searchObject) {
+            var url = searchObject["returnUrl"];
+            if (window.location.hash != '')
+                url += window.location.hash;
+            window.location.href = url;
+        }
+        else
+            window.location.href = "/";
+    }
+
+    var login = function () {
+        onBeforeLogin();
+
+        var password = txtPassword.getValue();
+        $.post("/Launcher/Api/Login", { Password: password }, function (ret) {
+            if (ret.code == 0) {
+                onLoginSuccess();
+            } else {
+                Ext.MessageBox.alert('Login Failed', ret.message, onAfterLogin);
+            }
+        }).error(function (e) {
+            Ext.MessageBox.alert('Login Failed', "Network error.", onAfterLogin);
+        });
+    }
+
+    $('input').keypress(function (e) {
+        if (e.keyCode == 13)
+            login();
+    });
+</script>
