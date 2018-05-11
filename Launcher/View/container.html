@@ -93,6 +93,16 @@
                                 handler: function () {
                                     stopModel();
                                 }
+                            },
+                            {
+                                itemId: 'btnRestart',
+                                xtype: 'button',
+                                glyph: 'xf01e@FontAwesome',
+                                text: 'Restart',
+                                disabled: true,
+                                handler: function () {
+                                    restartModel();
+                                }
                             }
                         ]
                     }
@@ -149,9 +159,11 @@
                             || selected.length == 0) {
                             viewport.down('#btnStart').setDisabled(true);
                             viewport.down('#btnStop').setDisabled(true);
+                            viewport.down('#btnRestart').setDisabled(true);
                         } else {
                             viewport.down('#btnStart').setDisabled(selected.length != 1);
                             viewport.down('#btnStop').setDisabled(selected.length != 1);
+                            viewport.down('#btnRestart').setDisabled(selected.length != 1);
                         }
                     }
                 }
@@ -336,6 +348,19 @@
                 }
                 refreshModel();
                 Ext.Msg.alert('Success','Start successed.');
+            });
+        }
+        
+        function restartModel(){
+            $.post('/Launcher/Api/Container/Restart',{
+                Id:getSelectedIds()[0]
+            },function(ret){
+                if(ret.code!=0){
+                    Ext.Msg.alert('Failed',ret.message);
+                    return;
+                }
+                refreshModel();
+                Ext.Msg.alert('Success','Restart successed.');
             });
         }
     });

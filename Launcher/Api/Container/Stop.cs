@@ -13,11 +13,10 @@ namespace Launcher.Api.Container
     {
         public class Parameter
         {            
-            //容器编号
             public string Id { get; set; }
         }
 
-        public override string Name => "停止容器";
+        public override string Name => "Stop container";
 
         public override HttpMethod Method => HttpMethod.POST;
 

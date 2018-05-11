@@ -22,7 +22,7 @@ namespace Launcher
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.CookieName = "test.sid";
+                options.CookieName = "SimpleDockerUI.sid";
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
                 options.CookieHttpOnly = true;
             });
