@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Container Manage</title>
+    <link rel="stylesheet" href="/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/Resource/require.js-2.3.5/require.js"></script>
+    <script src="/Resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/Resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+</head>
+
+<body>
+</body>
+
+</html>
+<script type="text/javascript">
+    require([
+        "/Resource/ext-store/Docker.Container.js"
+    ], function () {
+        //视图
+        var viewport = Ext.create('Ext.container.Viewport', {
+            xtype: 'container',
+            layout: 'fit',
+            items: {
+                xtype: 'grid',
+                //selType: 'checkboxmodel',
+                store: 'Docker.Container',
+                dockedItems: [
+                    {
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [
+                            {
+                                xtype: 'button',
+                                glyph: 'xf021@FontAwesome',
+                                text: 'Refresh',
+                                handler: function () {
+                                    refreshModel();
+                                }
+                            },
+                            '-',
+                            {
+                                xtype: 'button',
+                                glyph: 'xf067@FontAwesome',
+                                text: 'Add',
+                                disabled: true,
+                                handler: function () {
+                                    addModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnDelete',
+                                xtype: 'button',
+                                glyph: 'xf00d@FontAwesome',
+                                text: 'Delete',
+                                disabled: true,
+                                handler: function () {
+                                    deleteModel();
+                                }
+                            },
+                            '-',
+                            {
+                                itemId: 'btnStart',
+                                xtype: 'button',
+                                glyph: 'xf04b@FontAwesome',
+                                text: 'Start',
+                                disabled: true,
+                                handler: function () {
+                                    startModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnStop',
+                                xtype: 'button',
+                                glyph: 'xf04d@FontAwesome',
+                                text: 'Stop',
+                                disabled: true,
+                                handler: function () {
+                                    stopModel();
+                                }
+                            },
+                            {
+                                itemId: 'btnRestart',
+                                xtype: 'button',
+                                glyph: 'xf01e@FontAwesome',
+                                text: 'Restart',
+                                disabled: true,
+                                handler: function () {
+                                    restartModel();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                columns: [
+                    {
+                        text: 'Id',
+                        sortable: true,
+                        dataIndex: 'id',
+                        hidden: true,
+                        flex: 1
+                    },
+                    {
+                        text: 'Name',
+                        sortable: true,
+                        dataIndex: 'name',
+                        flex: 1
+                    },
+                    {
+                        text: 'Image',
+                        sortable: true,
+                        dataIndex: 'image',
+                        flex: 1
+                    },
+                    {
+                        text: 'Command',
+                        sortable: true,
+                        dataIndex: 'command',
+                        flex: 1
+                    },
+                    {
+                        text: 'Port',
+                        sortable: true,
+                        dataIndex: 'port',
+                        flex: 1
+                    },
+                    {
+                        text: 'Status',
+                        sortable: false,
+                        dataIndex: 'status',
+                        flex: 1
+                    },
+                    {
+                        text: 'Created',
+                        sortable: true,
+                        dataIndex: 'created',
+                        renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
+                        flex: 1
+                    }
+                ],
+                listeners: {
+                    selectionchange: function (sender, selected, eOpts) {
+                        if (selected == null
+                            || selected.length == 0) {
+                            viewport.down('#btnStart').setDisabled(true);
+                            viewport.down('#btnStop').setDisabled(true);
+                            viewport.down('#btnRestart').setDisabled(true);
+                        } else {
+                            viewport.down('#btnStart').setDisabled(selected.length != 1);
+                            viewport.down('#btnStop').setDisabled(selected.length != 1);
+                            viewport.down('#btnRestart').setDisabled(selected.length != 1);
+                        }
+                    }
+                }
+            }
+        });
+
+        function refreshModel() {
+            var store = Ext.data.StoreManager.lookup('Docker.Container');
+            store.reload();
+        }
+        refreshModel();
+
+        function addModel() {
+
+        }
+
+
+        function getSelectedIds() {
+            var ids = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                ids.push(record.get('id'));
+            });
+            return ids;
+        }
+
+        function getSelectedNames() {
+            var names = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                names.push(record.get('Name'));
+            });
+            return names;
+        }
+
+        function deleteModel() {
+
+        }
+
+        function startModel() {
+            $.ajax({
+                url: '/api/Container/{id}/start'.replace(/{id}/g, getSelectedIds()[0]),
+                type: 'PUT',
+                success: function (response) {
+                    Ext.Msg.alert('Success', 'Start successed.');
+                    refreshModel();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.readyState == 0)
+                        Ext.Msg.alert('Failed', 'Network error.');
+                    else
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                }
+            });
+        }
+
+        function stopModel() {
+            $.ajax({
+                url: '/api/Container/{id}/stop'.replace(/{id}/g, getSelectedIds()[0]),
+                type: 'PUT',
+                success: function (response) {
+                    Ext.Msg.alert('Success', 'Stop successed.');
+                    refreshModel();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.readyState == 0)
+                        Ext.Msg.alert('Failed', 'Network error.');
+                    else
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                }
+            });
+        }
+
+        function restartModel() {
+            $.ajax({
+                url: '/api/Container/{id}/restart'.replace(/{id}/g, getSelectedIds()[0]),
+                type: 'PUT',
+                success: function (response) {
+                    Ext.Msg.alert('Success', 'Restart successed.');
+                    refreshModel();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.readyState == 0)
+                        Ext.Msg.alert('Failed', 'Network error.');
+                    else
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                }
+            });
+        }
+    });
+</script>
