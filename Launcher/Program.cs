@@ -16,6 +16,9 @@ namespace Launcher
         public static IDictionary<string, string> GlobalProperties;
         public static void Main(string[] args)
         {
+            Console.WriteLine("Environment.CurrentDirectory: " + Environment.CurrentDirectory);
+            Console.WriteLine("Directory.GetCurrentDirectory(): " + Directory.GetCurrentDirectory());
+
             //加载全局配置
             GlobalProperties = PropertyUtils.Load("include=*.properties", Environment.CurrentDirectory);
             BuildWebHost(args, GlobalProperties["server.urls"].Split(';')).Run();

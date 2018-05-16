@@ -110,7 +110,7 @@
             if (jqXHR.readyState == 0)
                 Ext.Msg.alert('Login Failed', 'Network error.', onAfterLogin);
             else
-                Ext.Msg.alert('Login Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                Ext.Msg.alert('Login Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'), onAfterLogin);
         });
     }
 

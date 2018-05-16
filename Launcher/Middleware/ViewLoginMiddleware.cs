@@ -42,7 +42,7 @@ namespace Launcher.Middleware
 
             if (string.IsNullOrEmpty(isLogin) && !whiteList.Contains(path))
             {
-                var returnUrl = $"{req.Scheme}://{req.Host.Value}{req.Path}";
+                var returnUrl = $"{req.Path}";
                 if (req.QueryString.HasValue)
                     returnUrl += req.QueryString.ToString();
                 returnUrl = System.Text.Encodings.Web.UrlEncoder.Default.Encode(returnUrl);
