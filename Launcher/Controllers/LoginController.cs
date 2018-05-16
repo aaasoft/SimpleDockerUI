@@ -9,6 +9,12 @@ using Quick.Properties.Utils;
 
 namespace Launcher.Controllers
 {
+    /// <summary>
+    /// Login Controller
+    /// </summary>
+    /// <remarks>
+    /// Some remarks can put here.
+    /// </remarks>
     [Route("api/[controller]")]
     public class LoginController : Controller, IPropertyHunter
     {
@@ -30,7 +36,16 @@ namespace Launcher.Controllers
             }
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Login to SimpleDockerUI
+        /// </summary>
+        /// <remarks>
+        /// Some remarks can put here.
+        /// </remarks>
+        /// <param name="password">The password</param>
+        /// <returns></returns>
+        /// <response code="401">Password not match.</response> 
+        [HttpPost]        
         public IActionResult Post([FromForm]string password)
         {
             if (this.Password == password)

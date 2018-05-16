@@ -11,9 +11,16 @@ using Launcher.Model;
 
 namespace Launcher.Controllers
 {
+    /// <summary>
+    /// Container Controller
+    /// </summary>
     [Route("api/[controller]")]
     public class ContainerController : Controller
     {
+        /// <summary>
+        /// Get Container List
+        /// </summary>
+        /// <returns>Container List</returns>
         [HttpGet]
         public IEnumerable<Container> Get()
         {
@@ -41,12 +48,23 @@ namespace Launcher.Controllers
             return list;
         }
 
+        /// <summary>
+        /// Get a Container's info
+        /// </summary>
+        /// <param name="id">Container's id</param>
+        /// <returns></returns>
+        /// <response code="204">Can't found Container by input id.</response> 
         [HttpGet("{id}")]
         public Container Get(string id)
         {
             return Get().FirstOrDefault(t => t.Id == id);
         }
 
+        /// <summary>
+        /// Start a Container
+        /// </summary>
+        /// <param name="id">Container's id</param>
+        /// <returns></returns>
         [HttpPut("{id}/start")]
         public IActionResult Start(string id)
         {
@@ -68,6 +86,11 @@ namespace Launcher.Controllers
             return base.Ok();
         }
 
+        /// <summary>
+        /// Stop a Conatiner
+        /// </summary>
+        /// <param name="id">Container's id</param>
+        /// <returns></returns>
         [HttpPut("{id}/stop")]
         public IActionResult Stop(string id)
         {
@@ -89,7 +112,11 @@ namespace Launcher.Controllers
             return base.Ok();
         }
 
-
+        /// <summary>
+        /// Restart a Container
+        /// </summary>
+        /// <param name="id">Container's id</param>
+        /// <returns></returns>
         [HttpPut("{id}/restart")]
         public IActionResult Restart(string id)
         {
