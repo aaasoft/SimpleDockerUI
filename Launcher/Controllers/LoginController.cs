@@ -10,12 +10,13 @@ using Quick.Properties.Utils;
 namespace Launcher.Controllers
 {
     /// <summary>
-    /// Login Controller
+    /// Apis about Login
     /// </summary>
     /// <remarks>
     /// Some remarks can put here.
     /// </remarks>
-    [Route("api/[controller]")]
+        [Route("api/[controller]")]
+    //[Produces("application/json")]
     public class LoginController : Controller, IPropertyHunter
     {
         public LoginController()

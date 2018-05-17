@@ -31,7 +31,7 @@ Ext.create('Ext.data.Store', {
                 if (typeof (operation.error) == 'string')
                     message = operation.error;
                 else
-                    message = response.status + ' ' + response.statusText;
+                    message = response.status + ' ' + response.statusText + '<br/>' + response.responseText;
                 Ext.MessageBox.alert('Error', message);
             }
         }
