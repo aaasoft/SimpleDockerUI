@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Image Manage</title>
+    <link rel="stylesheet" href="/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/Resource/require.js-2.3.5/require.js"></script>
+    <script src="/Resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/Resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+</head>
+
+<body>
+</body>
+
+</html>
+<script type="text/javascript">
+    function formatBytes(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+
+    require([
+        "/Resource/ext-store/Docker.Image.js"
+    ], function () {
+        //视图
+        var viewport = Ext.create('Ext.container.Viewport', {
+            xtype: 'container',
+            layout: 'fit',
+            items: {
+                xtype: 'grid',
+                store: 'Docker.Image',
+                dockedItems: [
+                    {
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [
+                            {
+                                xtype: 'button',
+                                glyph: 'xf021@FontAwesome',
+                                text: 'Refresh',
+                                handler: function () {
+                                    refreshModel();
+                                }
+                            },
+                            '-',
+                            {
+                                itemId: 'btnDelete',
+                                xtype: 'button',
+                                glyph: 'xf00d@FontAwesome',
+                                text: 'Delete',
+                                disabled: true,
+                                handler: function () {
+                                    deleteModel();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                columns: [
+                    {
+                        text: 'Id',
+                        sortable: true,
+                        dataIndex: 'id',
+                        hidden: true,
+                        flex: 1
+                    },
+                    {
+                        text: 'Repository',
+                        sortable: true,
+                        dataIndex: 'repo',
+                        flex: 1
+                    },
+                    {
+                        text: 'Tag',
+                        sortable: true,
+                        dataIndex: 'tag',
+                        flex: 1
+                    },
+                    {
+                        text: 'Created',
+                        sortable: true,
+                        dataIndex: 'created',
+                        renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
+                        flex: 1
+                    },
+                    {
+                        text: 'VirtualSize',
+                        sortable: true,
+                        dataIndex: 'virtualSize',
+                        flex: 1,
+                        renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                            return formatBytes(value);
+                        }
+                    }
+                ],
+                listeners: {
+                    selectionchange: function (sender, selected, eOpts) {
+                        if (selected == null
+                            || selected.length == 0) {
+                            viewport.down('#btnDelete').setDisabled(true);
+                        } else {
+                            viewport.down('#btnDelete').setDisabled(selected.length != 1);
+                        }
+                    }
+                }
+            }
+        });
+
+        function refreshModel() {
+            var store = Ext.data.StoreManager.lookup('Docker.Image');
+            store.reload();
+        }
+        refreshModel();
+
+        function getSelectedIds() {
+            var ids = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                ids.push(record.get('id'));
+            });
+            return ids;
+        }
+
+        function getSelectedNames() {
+            var names = [];
+            var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
+            Ext.Array.each(selectedItems, function (record) {
+                names.push(record.get('repoTags'));
+            });
+            return names;
+        }
+
+        function deleteModel() {
+            Ext.Msg.confirm('Delete confirm', 'Are you sure to delete Image[' + getSelectedNames().join(',') + ']？', function (id) {
+                if (id != 'yes')
+                    return;
+                viewport.setLoading('Deleting...');
+                $.ajax({
+                    url: '/api/Image/{id}'.replace(/{id}/g, getSelectedIds()[0]),
+                    type: 'DELETE',
+                    success: function (response) {
+                        viewport.setLoading(false);
+                        Ext.Msg.alert('Success', 'Delete successed.');
+                        refreshModel();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        viewport.setLoading(false);
+                        if (jqXHR.readyState == 0)
+                            Ext.Msg.alert('Failed', 'Network error.');
+                        else
+                            Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
+                    }
+                });
+            });
+        }
+    });
+</script>

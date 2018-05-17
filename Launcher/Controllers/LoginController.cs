@@ -58,5 +58,16 @@ namespace Launcher.Controllers
             else
                 return StatusCode(401, "Password not match.");
         }
+
+        /// <summary>
+        /// Logout
+        /// </summary>
+        [HttpDelete]
+        public IActionResult Logout()
+        {
+            var session = base.HttpContext.Session;
+            session.Clear();
+            return Ok();
+        }
     }
 }

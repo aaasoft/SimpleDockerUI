@@ -69,14 +69,27 @@ namespace Launcher.Controllers
         /// <response code="500">Other error.</response>
         [HttpPost]
         [ProducesResponseType(typeof(Container), 200)]
-        public IActionResult Create([FromBody]Config config)
+        public IActionResult Create([FromBody]CreateContainerConfig config)
         {
             try
             {
                 string id = null;
                 DockerClientUtils.UseDockerClient(client =>
                 {
-                    var ret = client.Containers.CreateContainerAsync(new CreateContainerParameters(config)).Result;
+                    var ret = client.Containers.CreateContainerAsync(new CreateContainerParameters()
+                    {
+                        Shell = config.Shell,
+                        Entrypoint = config.Entrypoint,
+                        WorkingDir = config.WorkingDir,
+                        Volumes = config.Volumes,
+                        Image = config.Image,
+                        Cmd = config.Cmd,
+                        Env = config.Env,
+                        ExposedPorts = config.ExposedPorts,
+                        Name = config.Name,
+                        HostConfig = config.HostConfig,
+                        NetworkingConfig = config.NetworkingConfig
+                    }).Result;
                     id = ret.ID;
                 });
                 return new ObjectResult(Get(id));

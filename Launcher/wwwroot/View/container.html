@@ -48,6 +48,7 @@
                                 xtype: 'button',
                                 glyph: 'xf067@FontAwesome',
                                 text: 'Create',
+                                disabled: true,
                                 handler: function () {
                                     addModel();
                                 }
@@ -210,14 +211,17 @@
             Ext.Msg.confirm('Delete confirm', 'Are you sure to delete container[' + getSelectedNames().join(',') + ']？', function (id) {
                 if (id != 'yes')
                     return;
+                viewport.setLoading('Deleting...');
                 $.ajax({
                     url: '/api/Container/{id}'.replace(/{id}/g, getSelectedIds()[0]),
                     type: 'DELETE',
                     success: function (response) {
+                        viewport.setLoading(false);
                         Ext.Msg.alert('Success', 'Delete successed.');
                         refreshModel();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
+                        viewport.setLoading(false);
                         if (jqXHR.readyState == 0)
                             Ext.Msg.alert('Failed', 'Network error.');
                         else
@@ -228,14 +232,17 @@
         }
 
         function startModel() {
+            viewport.setLoading('Starting...');
             $.ajax({
                 url: '/api/Container/{id}/Start'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
+                    viewport.setLoading(false);
                     Ext.Msg.alert('Success', 'Start successed.');
                     refreshModel();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    viewport.setLoading(false);
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else
@@ -245,14 +252,17 @@
         }
 
         function stopModel() {
+            viewport.setLoading('Stoping...');
             $.ajax({
                 url: '/api/Container/{id}/Stop'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
+                    viewport.setLoading(false);
                     Ext.Msg.alert('Success', 'Stop successed.');
                     refreshModel();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    viewport.setLoading(false);
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else
@@ -262,14 +272,17 @@
         }
 
         function restartModel() {
+            viewport.setLoading('Restarting...');
             $.ajax({
                 url: '/api/Container/{id}/Restart'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
+                    viewport.setLoading(false);
                     Ext.Msg.alert('Success', 'Restart successed.');
                     refreshModel();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    viewport.setLoading(false);
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else

@@ -22,6 +22,24 @@
     var opendTabIds_cookieKey = menuType + '.opendTabIds';
     var opendTabIds = [];
 
+    function logout(){
+        $.ajax({
+                url: '/api/Login',
+                type: 'DELETE',
+                success: function (response) {
+                    Ext.Msg.alert('Success', 'Logout successed.',function(){
+                        window.location.reload();
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.readyState == 0)
+                        Ext.Msg.alert('Failed', 'Network error.');
+                    else
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
+                }
+            });
+    }
+
     Ext.onReady(function () {
         var menuTreeCmp = Ext.create('Ext.tree.Panel', {
             itemId: 'menuTree',
@@ -40,9 +58,22 @@
                 expanded: true,
                 children: [
                     {
+                        id: 'b6a56089d4e544de941ae28c1f7d5210',
+                        text: 'Image Manage',
+                        url: '/View/image.html',
+                        leaf: true
+                    },
+                    {
                         id: 'bca950c9de684d4193e14fd778557ba3',
                         text: 'Container Manage',
                         url: '/View/container.html',
+                        leaf: true
+                    },
+                    {
+                        id: '46e54a3a0552461ca899dd76650704e1',
+                        glyph: 'xf08b@FontAwesome',
+                        text: 'Logout',
+                        url: 'javascript:logout();',
                         leaf: true
                     }
                 ]
@@ -85,7 +116,10 @@
             }
             if (item.url == '#')
                 return;
-
+            if (item.url.startsWith('javascript:')){
+                window.location.href = item.url;
+                return;
+            }
             var tab = mainPanel.getComponent(item.id);
             if (tab == null)
                 tab = mainPanel.add({
