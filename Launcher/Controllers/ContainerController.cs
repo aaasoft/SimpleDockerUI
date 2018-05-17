@@ -14,7 +14,7 @@ namespace Launcher.Controllers
     /// <summary>
     /// Apis about Container Controller
     /// </summary>
-    [Route("api/[controller]")]    
+    [Route("api/[controller]")]
     public class ContainerController : Controller
     {
         /// <summary>
@@ -61,29 +61,79 @@ namespace Launcher.Controllers
         }
 
         /// <summary>
-        /// Start a Container
+        /// Create a Container
+        /// </summary>
+        /// <param name="config">Config to create container.</param>
+        /// <returns></returns>
+        /// <response code="200">return created container's info</response> 
+        /// <response code="500">Other error.</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(Container), 200)]
+        public IActionResult Create([FromBody]Config config)
+        {
+            try
+            {
+                string id = null;
+                DockerClientUtils.UseDockerClient(client =>
+                {
+                    var ret = client.Containers.CreateContainerAsync(new CreateContainerParameters(config)).Result;
+                    id = ret.ID;
+                });
+                return new ObjectResult(Get(id));
+            }
+            catch (Exception ex)
+            {
+                return base.StatusCode(500, $"Add Error.\r\n{ExceptionUtils.GetExceptionMessage(ex)}");
+            }
+        }
+
+        /// <summary>
+        /// Delete a Container
         /// </summary>
         /// <param name="id">Container's id</param>
         /// <returns></returns>
-        [HttpPut("{id}/start")]
-        public IActionResult Start(string id)
+        /// <response code="500">Other error.</response>
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
         {
-            bool ret = false;
-            string message = "Start Error.";
             try
             {
                 DockerClientUtils.UseDockerClient(client =>
                 {
-                    ret = client.Containers.StartContainerAsync(id, new ContainerStartParameters()).Result;
+                    client.Containers.RemoveContainerAsync(id, new ContainerRemoveParameters() { }).Wait();
                 });
+                return base.Ok();
             }
             catch (Exception ex)
             {
-                message += "\r\n" + ExceptionUtils.GetExceptionMessage(ex);
+                return base.StatusCode(500, $"Delete Error.\r\n{ExceptionUtils.GetExceptionMessage(ex)}");
             }
-            if (!ret)
-                return base.StatusCode(500, message);
-            return base.Ok();
+        }
+
+        /// <summary>
+        /// Start a Container
+        /// </summary>
+        /// <param name="id">Container's id</param>
+        /// <returns></returns>
+        /// <response code="500">Other error.</response> 
+        [HttpPut("{id}/Start")]
+        public IActionResult Start(string id)
+        {
+            try
+            {
+                bool ret = false;
+                DockerClientUtils.UseDockerClient(client =>
+                {
+                    ret = client.Containers.StartContainerAsync(id, new ContainerStartParameters()).Result;
+                });
+                if (ret)
+                    return base.Ok();
+                return base.StatusCode(500, $"Start Error.\r\nStart Method return 'false'.");
+            }
+            catch (Exception ex)
+            {
+                return base.StatusCode(500, $"Start Error.\r\n{ExceptionUtils.GetExceptionMessage(ex)}");
+            }
         }
 
         /// <summary>
@@ -91,25 +141,25 @@ namespace Launcher.Controllers
         /// </summary>
         /// <param name="id">Container's id</param>
         /// <returns></returns>
-        [HttpPut("{id}/stop")]
+        /// <response code="500">Other error.</response> 
+        [HttpPut("{id}/Stop")]
         public IActionResult Stop(string id)
         {
-            bool ret = false;
-            string message = "Stop Error.";
             try
             {
+                bool ret = false;
                 DockerClientUtils.UseDockerClient(client =>
                 {
                     ret = client.Containers.StopContainerAsync(id, new ContainerStopParameters()).Result;
                 });
+                if (ret)
+                    return base.Ok();
+                return base.StatusCode(500, $"Stop Error.\r\nStop Method return 'false'.");
             }
             catch (Exception ex)
             {
-                message += "\r\n" + ExceptionUtils.GetExceptionMessage(ex);
+                return base.StatusCode(500, $"Stop Error.\r\n{ExceptionUtils.GetExceptionMessage(ex)}");
             }
-            if (!ret)
-                return base.StatusCode(500, message);
-            return base.Ok();
         }
 
         /// <summary>
@@ -117,29 +167,16 @@ namespace Launcher.Controllers
         /// </summary>
         /// <param name="id">Container's id</param>
         /// <returns></returns>
-        [HttpPut("{id}/restart")]
+        /// <response code="500">Other error.</response> 
+        [HttpPut("{id}/Restart")]
         public IActionResult Restart(string id)
         {
-            bool ret = false;
-            string message = "Restart Error.";
-            try
-            {
-                DockerClientUtils.UseDockerClient(client =>
-                {
-                    ret = client.Containers.StopContainerAsync(id, new ContainerStopParameters()).Result;
-                    if (!ret)
-                        return;
-                    ret = client.Containers.StartContainerAsync(id, new ContainerStartParameters()).Result;
-                    if (!ret)
-                        return;
-                });
-            }
-            catch (Exception ex)
-            {
-                message += "\r\n" + ExceptionUtils.GetExceptionMessage(ex);
-            }
-            if (!ret)
-                return base.StatusCode(500, message);
+            var ret = Stop(id);
+            if (!(ret is OkResult))
+                return ret;
+            ret = Start(id);
+            if (!(ret is OkResult))
+                return ret;
             return base.Ok();
         }
     }

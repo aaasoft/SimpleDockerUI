@@ -47,8 +47,7 @@
                             {
                                 xtype: 'button',
                                 glyph: 'xf067@FontAwesome',
-                                text: 'Add',
-                                disabled: true,
+                                text: 'Create',
                                 handler: function () {
                                     addModel();
                                 }
@@ -147,10 +146,12 @@
                     selectionchange: function (sender, selected, eOpts) {
                         if (selected == null
                             || selected.length == 0) {
+                            viewport.down('#btnDelete').setDisabled(true);
                             viewport.down('#btnStart').setDisabled(true);
                             viewport.down('#btnStop').setDisabled(true);
                             viewport.down('#btnRestart').setDisabled(true);
                         } else {
+                            viewport.down('#btnDelete').setDisabled(selected.length != 1);
                             viewport.down('#btnStart').setDisabled(selected.length != 1);
                             viewport.down('#btnStop').setDisabled(selected.length != 1);
                             viewport.down('#btnRestart').setDisabled(selected.length != 1);
@@ -167,9 +168,25 @@
         refreshModel();
 
         function addModel() {
-
+            $.ajax({
+                url: '/api/Container',
+                type: 'POST',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify({
+                    Image: 'swaggerapi/swagger-ui:v3.14.2'
+                }),
+                success: function (response) {
+                    Ext.Msg.alert('Success', 'Create successed.');
+                    refreshModel();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.readyState == 0)
+                        Ext.Msg.alert('Failed', 'Network error.');
+                    else
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
+                }
+            });
         }
-
 
         function getSelectedIds() {
             var ids = [];
@@ -184,18 +201,35 @@
             var names = [];
             var selectedItems = viewport.down('grid').getSelectionModel().getSelection();
             Ext.Array.each(selectedItems, function (record) {
-                names.push(record.get('Name'));
+                names.push(record.get('name'));
             });
             return names;
         }
 
         function deleteModel() {
-
+            Ext.Msg.confirm('Delete confirm', 'Are you sure to delete container[' + getSelectedNames().join(',') + ']？', function (id) {
+                if (id != 'yes')
+                    return;
+                $.ajax({
+                    url: '/api/Container/{id}'.replace(/{id}/g, getSelectedIds()[0]),
+                    type: 'DELETE',
+                    success: function (response) {
+                        Ext.Msg.alert('Success', 'Delete successed.');
+                        refreshModel();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.readyState == 0)
+                            Ext.Msg.alert('Failed', 'Network error.');
+                        else
+                            Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
+                    }
+                });
+            });
         }
 
         function startModel() {
             $.ajax({
-                url: '/api/Container/{id}/start'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/Container/{id}/Start'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     Ext.Msg.alert('Success', 'Start successed.');
@@ -205,14 +239,14 @@
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else
-                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
                 }
             });
         }
 
         function stopModel() {
             $.ajax({
-                url: '/api/Container/{id}/stop'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/Container/{id}/Stop'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     Ext.Msg.alert('Success', 'Stop successed.');
@@ -222,14 +256,14 @@
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else
-                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
                 }
             });
         }
 
         function restartModel() {
             $.ajax({
-                url: '/api/Container/{id}/restart'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/Container/{id}/Restart'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     Ext.Msg.alert('Success', 'Restart successed.');
@@ -239,7 +273,7 @@
                     if (jqXHR.readyState == 0)
                         Ext.Msg.alert('Failed', 'Network error.');
                     else
-                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\r\n/g, '<br/>'));
+                        Ext.Msg.alert('Failed', jqXHR.responseText.replace(/\n/g, '<br/>'));
                 }
             });
         }
