@@ -19,7 +19,7 @@ Ext.create('Ext.data.Store', {
     remoteSort: true,
     proxy: {
         type: 'rest',
-        url: '/api/Image',
+        url: '/api/v1/Image',
         pageParam: null,
         startParam: null,
         limitParam: null,

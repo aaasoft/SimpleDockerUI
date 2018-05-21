@@ -9,12 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Launcher.Model;
 
-namespace Launcher.Controllers
+namespace Launcher.Controllers.V1
 {
     /// <summary>
     /// Apis about Container Controller
     /// </summary>
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route( "api/v{api-version:apiVersion}/[controller]" )]
     public class ImageController : Controller
     {
         /// <summary>

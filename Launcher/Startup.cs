@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -34,21 +35,44 @@ namespace Launcher
                 options.Cookie.HttpOnly = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(10);                
             });
-            services.AddMvc();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "SimpleDockerUI API", Version = "v1" });
+            
+            // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+            // note: the specified format code will format the version as "'v'major[.minor][-status]"
+            services.AddMvcCore().AddVersionedApiExplorer(
+                options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
 
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-                c.DocumentFilter<Controllers.TagDescriptionsDocumentFilter>();
-            });
+                    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                    // can also be used to control the format of the API version in route templates
+                    options.SubstituteApiVersionInUrl = true;
+                });
+            services.AddMvc();
+            services.AddApiVersioning(o => o.ReportApiVersions = true);
+            services.AddSwaggerGen(
+                options =>
+                {
+                    // resolve the IApiVersionDescriptionProvider service
+                    // note: that we have to build a temporary service provider here because one has not been created yet
+                    var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+                    // add a swagger document for each discovered API version
+                    // note: you might choose to skip or document deprecated API versions differently
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+                    }
+
+                    // add a custom operation filter which sets default values
+                    options.OperationFilter<SwaggerDefaultValues>();
+
+                    // integrate xml comments
+                    options.IncludeXmlComments(XmlCommentsFilePath);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -59,7 +83,12 @@ namespace Launcher
 
             //支持视图登录控制
             app.UseMiddleware<Launcher.Middleware.ViewLoginMiddleware>();
-
+            //支持默认文件
+            app.UseDefaultFiles(new DefaultFilesOptions(){DefaultFileNames=new List<string>()
+            {
+                "index.html",
+                "View/index.html"
+            }});
             //支持静态文件
             app.UseStaticFiles();
 
@@ -67,28 +96,43 @@ namespace Launcher
             app.UseMiddleware<Launcher.Middleware.ApiLoginMiddleware>();
 
             app.UseMvc();
-            var swaggerEndpoint = "";
-            app.UseSwagger(option =>
-            {
-                swaggerEndpoint = option.RouteTemplate;
-                swaggerEndpoint = "/" + swaggerEndpoint.Replace("{documentName}", "v1");
-            });
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint(swaggerEndpoint, "SimpleDockerUI API V1");
-            });
-            app.Run(async (context) =>
-            {
-                if (context.Request.Path == "/")
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                options =>
                 {
-                    var rep = context.Response;
-                    rep.ContentType = "text/html; charset=UTF-8";
-                    await rep.WriteAsync(File.ReadAllText("wwwroot/View/index.html"));
-                    return;
-                }
-                context.Response.StatusCode = 404;
-                await context.Response.WriteAsync("404 NOT FOUND");
-            });
+                    // build a swagger endpoint for each discovered API version
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    }
+                });
+        }
+
+        
+        static string XmlCommentsFilePath
+        {
+            get
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                return xmlPath;
+            }
+        }
+
+        static Info CreateInfoForApiVersion(ApiVersionDescription description)
+        {
+            var info = new Info()
+            {
+                Title = $"SimpleDockerUI API {description.ApiVersion}",
+                Version = description.ApiVersion.ToString()
+            };
+
+            if (description.IsDeprecated)
+            {
+                info.Description += " This API version has been deprecated.";
+            }
+
+            return info;
         }
     }
 }

@@ -17,7 +17,7 @@ Ext.create('Ext.data.Store', {
     remoteSort: true,
     proxy: {
         type: 'rest',
-        url: '/api/Container',
+        url: '/api/v1/Container',
         pageParam: null,
         startParam: null,
         limitParam: null,

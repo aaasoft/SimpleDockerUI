@@ -11,7 +11,7 @@ namespace Launcher.Middleware
     {
         private const String RETURN_URL_KEY = "returnUrl";
         private Regex regex = new Regex(
-            "^(/View/(?'path'.*))|(/swagger/.*)|(/)$",
+            "^(/view/(?'path'.*))|(/swagger/.*)|(/)$",
             //编译为程序集提高匹配速度
             RegexOptions.Compiled
             );
@@ -24,7 +24,7 @@ namespace Launcher.Middleware
 
         private List<string> whiteList = new List<string>(new[]
             {
-                "/View/login.html"
+                "/view/login.html"
             }
         );
 
@@ -49,7 +49,7 @@ namespace Launcher.Middleware
 
                 rep.ContentType = "text/html;charset=utf-8";
                 
-                rep.Redirect($"/View/login.html?{RETURN_URL_KEY}={returnUrl}");
+                rep.Redirect($"/view/login.html?{RETURN_URL_KEY}={returnUrl}");
                 return Task.Run(() => { });
             }
             else

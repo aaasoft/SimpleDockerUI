@@ -24,7 +24,7 @@ namespace Launcher.Middleware
 
         private List<string> whiteList = new List<string>(new[]
             {
-                "/api/Login"
+                "/api/v1/Login"
             }
         );
 

@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SimpleDockerUI</title>
-    <link rel="stylesheet" href="/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
-    <script src="/Resource/jquery-1.12.4/jquery.min.js"></script>
-    <script src="/Resource/ext-6.2.0/ext-all.js"></script>
-    <script src="/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+    <link rel="stylesheet" href="/resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/resource/ext-6.2.0/classic/locale/locale-en.js"></script>
 </head>
 
 <body>
@@ -104,7 +104,7 @@
         onBeforeLogin();
 
         var password = txtPassword.getValue();
-        $.post("/api/Login", { Password: password }, function (ret) {
+        $.post("/api/v1/Login", { Password: password }, function (ret) {
             onLoginSuccess();
         }).error(function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.readyState == 0)

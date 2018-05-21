@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Container Manage</title>
-    <link rel="stylesheet" href="/Resource/font-awesome-4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/Resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
-    <script src="/Resource/require.js-2.3.5/require.js"></script>
-    <script src="/Resource/jquery-1.12.4/jquery.min.js"></script>
-    <script src="/Resource/ext-6.2.0/ext-all.js"></script>
-    <script src="/Resource/ext-6.2.0/classic/locale/locale-en.js"></script>
+    <link rel="stylesheet" href="/resource/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/resource/ext-6.2.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+    <script src="/resource/require.js-2.3.5/require.js"></script>
+    <script src="/resource/jquery-1.12.4/jquery.min.js"></script>
+    <script src="/resource/ext-6.2.0/ext-all.js"></script>
+    <script src="/resource/ext-6.2.0/classic/locale/locale-en.js"></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 </html>
 <script type="text/javascript">
     require([
-        "/Resource/ext-store/Docker.Container.js"
+        "/resource/ext-store/Docker.Container.js"
     ], function () {
         //视图
         var viewport = Ext.create('Ext.container.Viewport', {
@@ -170,7 +170,7 @@
 
         function addModel() {
             $.ajax({
-                url: '/api/Container',
+                url: '/api/v1/Container',
                 type: 'POST',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify({
@@ -213,7 +213,7 @@
                     return;
                 viewport.setLoading('Deleting...');
                 $.ajax({
-                    url: '/api/Container/{id}'.replace(/{id}/g, getSelectedIds()[0]),
+                    url: '/api/v1/Container/{id}'.replace(/{id}/g, getSelectedIds()[0]),
                     type: 'DELETE',
                     success: function (response) {
                         viewport.setLoading(false);
@@ -234,7 +234,7 @@
         function startModel() {
             viewport.setLoading('Starting...');
             $.ajax({
-                url: '/api/Container/{id}/Start'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/v1/Container/{id}/Start'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     viewport.setLoading(false);
@@ -254,7 +254,7 @@
         function stopModel() {
             viewport.setLoading('Stoping...');
             $.ajax({
-                url: '/api/Container/{id}/Stop'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/v1/Container/{id}/Stop'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     viewport.setLoading(false);
@@ -274,7 +274,7 @@
         function restartModel() {
             viewport.setLoading('Restarting...');
             $.ajax({
-                url: '/api/Container/{id}/Restart'.replace(/{id}/g, getSelectedIds()[0]),
+                url: '/api/v1/Container/{id}/Restart'.replace(/{id}/g, getSelectedIds()[0]),
                 type: 'PUT',
                 success: function (response) {
                     viewport.setLoading(false);

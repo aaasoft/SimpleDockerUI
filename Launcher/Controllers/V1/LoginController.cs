@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Quick.Properties;
 using Quick.Properties.Utils;
 
-namespace Launcher.Controllers
+namespace Launcher.Controllers.V1
 {
     /// <summary>
     /// Apis about Login
@@ -15,7 +15,8 @@ namespace Launcher.Controllers
     /// <remarks>
     /// Some remarks can put here.
     /// </remarks>
-        [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route( "api/v{api-version:apiVersion}/[controller]" )]
     //[Produces("application/json")]
     public class LoginController : Controller, IPropertyHunter
     {
