@@ -87,7 +87,7 @@ namespace Launcher
             app.UseDefaultFiles(new DefaultFilesOptions(){DefaultFileNames=new List<string>()
             {
                 "index.html",
-                "View/index.html"
+                "view/index.html"
             }});
             //支持静态文件
             app.UseStaticFiles();
