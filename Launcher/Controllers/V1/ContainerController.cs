@@ -27,7 +27,7 @@ namespace Launcher.Controllers.V1
         {
             IEnumerable<Container> list = null;
 #if DEBUG
-            var content = System.IO.File.ReadAllText("wwwroot/Resource/debug/containerList.json");
+            var content = System.IO.File.ReadAllText("wwwroot/resource/data/containerList.json");
             list = JsonConvert.DeserializeObject<Container[]>(content);
 #else
             DockerClientUtils.UseDockerClient(client =>

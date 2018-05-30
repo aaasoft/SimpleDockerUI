@@ -27,7 +27,7 @@ namespace Launcher.Controllers.V1
         {
             IEnumerable<Image> list = null;
 #if DEBUG
-            var content = System.IO.File.ReadAllText("wwwroot/Resource/debug/imageList.json");
+            var content = System.IO.File.ReadAllText("wwwroot/resource/data/imageList.json");
             list = JsonConvert.DeserializeObject<Image[]>(content);
 #else
             DockerClientUtils.UseDockerClient(client =>
