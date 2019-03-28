@@ -17,8 +17,6 @@ namespace SimpleDockerUI.App.Services
             throw new NotImplementedException();
         }
 
-        public abstract void Dispose();
-
         public virtual Task<T> GetItemAsync(string id)
         {
             throw new NotImplementedException();

@@ -17,13 +17,7 @@ namespace SimpleDockerUI.App.Services
         {
             this.siteItem = siteItem;
         }
-
-        public override void Dispose()
-        {
-            client.Dispose();
-            client = null;
-        }
-
+        
         public async override Task<IEnumerable<DockerContainerItem>> GetItemsAsync(bool forceRefresh = false)
         {
             //登录

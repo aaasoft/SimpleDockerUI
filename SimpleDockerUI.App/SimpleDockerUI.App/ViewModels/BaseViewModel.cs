@@ -10,10 +10,8 @@ using SimpleDockerUI.App.Services;
 
 namespace SimpleDockerUI.App.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged,IDisposable
+    public class BaseViewModel : INotifyPropertyChanged
     {
-        public virtual void Dispose() { }
-
         bool isBusy = false;
         public bool IsBusy
         {

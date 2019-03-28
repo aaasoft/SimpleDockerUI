@@ -41,10 +41,5 @@ namespace SimpleDockerUI.App.Views
             if (viewModel.Items.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
         }
-
-        private void ContentPage_Disappearing(object sender, EventArgs e)
-        {
-            viewModel.Dispose();
-        }
     }
 }

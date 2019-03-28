@@ -39,21 +39,45 @@ namespace SimpleDockerUI.App.Utils
         {
             var url = $"{siteItem.Url}/api/v1/Container/{dockerContainerItem.Id}/Start";
             var response = await client.PutAsync(url, null);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(message, ex);
+            }
         }
 
         public static async Task StopContainer(HttpClient client, SiteItem siteItem, DockerContainerItem dockerContainerItem)
         {
             var url = $"{siteItem.Url}/api/v1/Container/{dockerContainerItem.Id}/Stop";
             var response = await client.PutAsync(url, null);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(message, ex);
+            }
         }
 
         public static async Task RestartContainer(HttpClient client, SiteItem siteItem, DockerContainerItem dockerContainerItem)
         {
             var url = $"{siteItem.Url}/api/v1/Container/{dockerContainerItem.Id}/Restart";
             var response = await client.PutAsync(url, null);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new ApplicationException(message, ex);
+            }
         }
     }
 }

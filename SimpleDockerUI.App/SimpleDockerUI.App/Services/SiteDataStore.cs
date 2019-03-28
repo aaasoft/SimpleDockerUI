@@ -86,11 +86,5 @@ namespace SimpleDockerUI.App.Services
         {
             return await Task.FromResult(items);
         }
-
-        public void Dispose()
-        {
-            items.Clear();
-            items = null;
-        }
     }
 }

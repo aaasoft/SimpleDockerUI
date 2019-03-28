@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SimpleDockerUI.App.Services
 {
-    public interface IDataStore<T> : IDisposable
+    public interface IDataStore<T>
     {
         Task<bool> AddItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);

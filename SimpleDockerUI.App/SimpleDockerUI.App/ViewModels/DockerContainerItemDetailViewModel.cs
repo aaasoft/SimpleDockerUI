@@ -36,7 +36,8 @@ namespace SimpleDockerUI.App.ViewModels
                 await WebApiUtils.EnsureLogin(client, SiteItem);
                 await WebApiUtils.StartContainer(client, SiteItem, DockerContainerItem);
                 //退出登录
-                await WebApiUtils.EnsureLogin(client, SiteItem);
+                await WebApiUtils.Logout(client, SiteItem);
+                DependencyService.Get<IMessage>().LongAlert("启动容器成功！");
             }
             catch (Exception ex)
             {
@@ -54,7 +55,8 @@ namespace SimpleDockerUI.App.ViewModels
                 await WebApiUtils.EnsureLogin(client, SiteItem);
                 await WebApiUtils.StopContainer(client, SiteItem, DockerContainerItem);
                 //退出登录
-                await WebApiUtils.EnsureLogin(client, SiteItem);
+                await WebApiUtils.Logout(client, SiteItem);
+                DependencyService.Get<IMessage>().LongAlert("停止容器成功！");
             }
             catch (Exception ex)
             {
@@ -72,7 +74,8 @@ namespace SimpleDockerUI.App.ViewModels
                 await WebApiUtils.EnsureLogin(client, SiteItem);
                 await WebApiUtils.RestartContainer(client, SiteItem, DockerContainerItem);
                 //退出登录
-                await WebApiUtils.EnsureLogin(client, SiteItem);
+                await WebApiUtils.Logout(client, SiteItem);
+                DependencyService.Get<IMessage>().LongAlert("重新启动容器成功！");
             }
             catch (Exception ex)
             {

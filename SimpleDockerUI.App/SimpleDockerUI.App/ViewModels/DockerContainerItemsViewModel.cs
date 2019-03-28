@@ -51,11 +51,5 @@ namespace SimpleDockerUI.App.ViewModels
                 IsBusy = false;
             }
         }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            DataStore.Dispose();
-        }
     }
 }
