@@ -3,18 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SimpleDockerUI.App.Views.DockerContainerItemDetailPage"
              Title="{Binding Title}">
-    <StackLayout Spacing="20" Padding="15">
+    <StackLayout Spacing="10" Padding="15">
         <Label Text="名称:" FontSize="Medium" />
-        <Label Text="{Binding Item.Name}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Name}" FontSize="Small"/>
         <Label Text="镜像:" FontSize="Medium" />
-        <Label Text="{Binding Item.Image}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Image}" FontSize="Small"/>
         <Label Text="命令:" FontSize="Medium" />
-        <Label Text="{Binding Item.Command}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Command}" FontSize="Small"/>
         <Label Text="端口:" FontSize="Medium" />
-        <Label Text="{Binding Item.Port}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Port}" FontSize="Small"/>
         <Label Text="状态:" FontSize="Medium" />
-        <Label Text="{Binding Item.Status}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Status}" FontSize="Small"/>
         <Label Text="创建时间:" FontSize="Medium" />
-        <Label Text="{Binding Item.Created}" FontSize="Small"/>
+        <Label Text="{Binding DockerContainerItem.Created}" FontSize="Small"/>
+        <Button Text="启动" Command="{Binding StartCommand}" />
+        <Button Text="停止" Command="{Binding StopCommand}" />
+        <Button Text="重新启动" Command="{Binding RestartCommand}" />
     </StackLayout>
 </ContentPage>

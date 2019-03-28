@@ -28,7 +28,7 @@ namespace SimpleDockerUI.App.Views
             var item = args.SelectedItem as DockerContainerItem;
             if (item == null)
                 return;
-            await Navigation.PushAsync(new DockerContainerItemDetailPage(item));
+            await Navigation.PushAsync(new DockerContainerItemDetailPage(viewModel.SiteItem, item));
 
             // Manually deselect item.
             ItemsListView.SelectedItem = null;

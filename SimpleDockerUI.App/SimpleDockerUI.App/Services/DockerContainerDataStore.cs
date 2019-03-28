@@ -29,7 +29,10 @@ namespace SimpleDockerUI.App.Services
             //登录
             await WebApiUtils.EnsureLogin(client, siteItem);
             //获取容器列表
-            return await WebApiUtils.GetContainerItems(client, siteItem);
+            var items = await WebApiUtils.GetContainerItems(client, siteItem);
+            //退出登录
+            await WebApiUtils.Logout(client, siteItem);
+            return items;
         }
     }
 }

@@ -16,14 +16,14 @@ namespace SimpleDockerUI.App.Views
         public DockerContainerItemDetailPage(DockerContainerItemDetailViewModel viewModel)
         {
             InitializeComponent();
-
-            BindingContext = this.viewModel = viewModel;
+            this.viewModel = viewModel;
+            BindingContext = viewModel;
         }
 
-        public DockerContainerItemDetailPage(DockerContainerItem item)
+        public DockerContainerItemDetailPage(SiteItem siteItem, DockerContainerItem dockerContainerItem)
         {
             InitializeComponent();
-            viewModel = new DockerContainerItemDetailViewModel(item);
+            viewModel = new DockerContainerItemDetailViewModel(siteItem, dockerContainerItem);
             BindingContext = viewModel;
         }
     }

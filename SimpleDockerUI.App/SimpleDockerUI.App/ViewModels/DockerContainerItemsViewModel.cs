@@ -13,13 +13,13 @@ namespace SimpleDockerUI.App.ViewModels
     public class DockerContainerItemsViewModel : BaseViewModel
     {
         public IDataStore<DockerContainerItem> DataStore { get; private set; }
-        private SiteItem siteItem;
+        public SiteItem SiteItem { get; private set; }
         public ObservableCollection<DockerContainerItem> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 
         public DockerContainerItemsViewModel(SiteItem siteItem)
         {
-            this.siteItem = siteItem;
+            this.SiteItem = siteItem;
             DataStore = DependencyService.Get<IDataStore<DockerContainerItem>>() ?? new DockerContainerDataStore(siteItem);
             Title = $"Docker容器 - {siteItem.Name}";
             Items = new ObservableCollection<DockerContainerItem>();
