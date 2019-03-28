@@ -17,6 +17,17 @@ namespace SimpleDockerUI.App.ViewModels
         public Command StopCommand { get; set; }
         public Command RestartCommand { get; set; }
 
+        private string _BusyText;
+        public string BusyText
+        {
+            get { return _BusyText; }
+            set
+            {
+                _BusyText = value;
+                OnPropertyChanged(nameof(BusyText));
+            }
+        }
+
         public DockerContainerItemDetailViewModel(SiteItem siteItem, DockerContainerItem dockerContainerItem)
         {
             Title = $"容器[{dockerContainerItem?.Name}] - {siteItem.Name}";
@@ -30,6 +41,7 @@ namespace SimpleDockerUI.App.ViewModels
         async Task ExecuteStartCommand()
         {
             IsBusy = true;
+            BusyText = "正在启动容器...";
             try
             {
                 //登录
@@ -49,6 +61,7 @@ namespace SimpleDockerUI.App.ViewModels
         async Task ExecuteStopCommand()
         {
             IsBusy = true;
+            BusyText = "正在停止容器...";
             try
             {
                 //登录
@@ -68,6 +81,7 @@ namespace SimpleDockerUI.App.ViewModels
         async Task ExecuteRestartCommand()
         {
             IsBusy = true;
+            BusyText = "正在重新启动容器...";
             try
             {
                 //登录

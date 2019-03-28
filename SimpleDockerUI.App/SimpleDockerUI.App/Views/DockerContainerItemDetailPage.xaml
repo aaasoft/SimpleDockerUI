@@ -2,23 +2,32 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SimpleDockerUI.App.Views.DockerContainerItemDetailPage"
-             IsBusy="{Binding IsBusy, Mode=OneWay}"
              Title="{Binding Title}">
-    <StackLayout Spacing="10" Padding="15">
-        <Label Text="名称:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Name}" FontSize="Small"/>
-        <Label Text="镜像:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Image}" FontSize="Small"/>
-        <Label Text="命令:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Command}" FontSize="Small"/>
-        <Label Text="端口:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Port}" FontSize="Small"/>
-        <Label Text="状态:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Status}" FontSize="Small"/>
-        <Label Text="创建时间:" FontSize="Medium" />
-        <Label Text="{Binding DockerContainerItem.Created}" FontSize="Small"/>
-        <Button Text="启动" Command="{Binding StartCommand}" />
-        <Button Text="停止" Command="{Binding StopCommand}" />
-        <Button Text="重新启动" Command="{Binding RestartCommand}" />
-    </StackLayout>
+    <ScrollView>
+        <Grid>
+            <StackLayout Spacing="10" Padding="15">
+                <Label Text="名称:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Name}" FontSize="Small"/>
+                <Label Text="镜像:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Image}" FontSize="Small"/>
+                <Label Text="命令:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Command}" FontSize="Small"/>
+                <Label Text="端口:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Port}" FontSize="Small"/>
+                <Label Text="状态:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Status}" FontSize="Small"/>
+                <Label Text="创建时间:" FontSize="Medium" />
+                <Label Text="{Binding DockerContainerItem.Created}" FontSize="Small"/>
+                <Button Text="启动" Command="{Binding StartCommand}" />
+                <Button Text="停止" Command="{Binding StopCommand}" />
+                <Button Text="重新启动" Command="{Binding RestartCommand}" />
+            </StackLayout>
+            <Grid IsVisible="{Binding IsBusy}" BackgroundColor="White">
+                <StackLayout Spacing="10" Padding="15" HorizontalOptions="Center" VerticalOptions="Center">
+                    <ActivityIndicator WidthRequest="64" HeightRequest="64" IsRunning="{Binding IsBusy}"></ActivityIndicator>
+                    <Label Text="{Binding BusyText}" FontSize="Medium" />
+                </StackLayout>
+            </Grid>
+        </Grid>
+    </ScrollView>
 </ContentPage>
