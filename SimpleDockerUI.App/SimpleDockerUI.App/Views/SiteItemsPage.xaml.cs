@@ -15,15 +15,15 @@ using Newtonsoft.Json;
 namespace SimpleDockerUI.App.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ItemsPage : ContentPage
+    public partial class SiteItemsPage : ContentPage
     {
-        ItemsViewModel viewModel;
+        SiteItemsViewModel viewModel;
 
-        public ItemsPage()
+        public SiteItemsPage()
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new ItemsViewModel();
+            BindingContext = viewModel = new SiteItemsViewModel();
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
@@ -48,7 +48,7 @@ namespace SimpleDockerUI.App.Views
 
         async void AddItem_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(new SiteItem())));
+            await Navigation.PushModalAsync(new NavigationPage(new NewSiteItemPage(new SiteItem())));
         }
 
         async void EditItem_Clicked(object sender, EventArgs e)
@@ -56,7 +56,7 @@ namespace SimpleDockerUI.App.Views
             var mi = (MenuItem)sender;
             var item = (SiteItem)mi.CommandParameter;
             item = JsonConvert.DeserializeObject<SiteItem>(JsonConvert.SerializeObject(item));
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(item)));
+            await Navigation.PushModalAsync(new NavigationPage(new NewSiteItemPage(item)));
         }
 
         async void DelItem_Clicked(object sender, EventArgs e)

@@ -9,11 +9,11 @@ using SimpleDockerUI.App.Models;
 namespace SimpleDockerUI.App.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NewItemPage : ContentPage
+    public partial class NewSiteItemPage : ContentPage
     {
         public SiteItem Item { get; set; }
 
-        public NewItemPage(SiteItem item)
+        public NewSiteItemPage(SiteItem item)
         {
             InitializeComponent();
             if (string.IsNullOrEmpty(item.Id))

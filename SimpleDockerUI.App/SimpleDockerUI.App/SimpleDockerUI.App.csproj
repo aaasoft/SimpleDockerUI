@@ -13,4 +13,13 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />  
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\NewSiteItemPage.xaml.cs">
+      <DependentUpon>NewSiteItemPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SiteItemsPage.xaml.cs">
+      <DependentUpon>SiteItemsPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
