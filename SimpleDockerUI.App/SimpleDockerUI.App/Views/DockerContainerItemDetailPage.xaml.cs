@@ -9,28 +9,21 @@ using SimpleDockerUI.App.ViewModels;
 namespace SimpleDockerUI.App.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ItemDetailPage : ContentPage
+    public partial class DockerContainerItemDetailPage : ContentPage
     {
-        ItemDetailViewModel viewModel;
+        DockerContainerItemDetailViewModel viewModel;
 
-        public ItemDetailPage(ItemDetailViewModel viewModel)
+        public DockerContainerItemDetailPage(DockerContainerItemDetailViewModel viewModel)
         {
             InitializeComponent();
 
             BindingContext = this.viewModel = viewModel;
         }
 
-        public ItemDetailPage()
+        public DockerContainerItemDetailPage(DockerContainerItem item)
         {
             InitializeComponent();
-
-            var item = new SiteItem
-            {
-                Name = "Item 1",
-                Description = "This is an item description."
-            };
-
-            viewModel = new ItemDetailViewModel(item);
+            viewModel = new DockerContainerItemDetailViewModel(item);
             BindingContext = viewModel;
         }
     }
