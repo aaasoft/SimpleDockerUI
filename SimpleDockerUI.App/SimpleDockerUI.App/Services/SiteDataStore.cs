@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace SimpleDockerUI.App.Services
 {
-    public class JsonDataStore : IDataStore<SiteItem>
+    public class SiteDataStore : IDataStore<SiteItem>
     {
         private string configFileName;
         public List<SiteItem> items;
 
-        public JsonDataStore()
+        public SiteDataStore()
         {
             configFileName = PathUtils.GetConfigFile("config.json");
             if (File.Exists(configFileName))
@@ -85,6 +85,12 @@ namespace SimpleDockerUI.App.Services
         public async Task<IEnumerable<SiteItem>> GetItemsAsync(bool forceRefresh = false)
         {
             return await Task.FromResult(items);
+        }
+
+        public void Dispose()
+        {
+            items.Clear();
+            items = null;
         }
     }
 }

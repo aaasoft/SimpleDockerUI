@@ -1,0 +1,46 @@
+﻿using SimpleDockerUI.App.Models;
+using SimpleDockerUI.App.ViewModels;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace SimpleDockerUI.App.Views
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DockerContainerItemsPage : ContentPage
+    {
+        private DockerContainerItemsViewModel viewModel;
+        public ObservableCollection<string> Items { get; set; }
+
+        public DockerContainerItemsPage(DockerContainerItemsViewModel viewModel)
+        {
+            InitializeComponent();
+            BindingContext = this.viewModel = viewModel;
+        }
+
+        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            var item = args.SelectedItem as DockerContainerItem;
+            if (item == null)
+                return;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (viewModel.Items.Count == 0)
+                viewModel.LoadItemsCommand.Execute(null);
+        }
+
+        private void ContentPage_Disappearing(object sender, EventArgs e)
+        {
+            viewModel.Dispose();
+        }
+    }
+}

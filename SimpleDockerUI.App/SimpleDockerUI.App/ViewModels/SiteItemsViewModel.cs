@@ -8,11 +8,13 @@ using Xamarin.Forms;
 using SimpleDockerUI.App.Models;
 using SimpleDockerUI.App.Views;
 using System.Linq;
+using SimpleDockerUI.App.Services;
 
 namespace SimpleDockerUI.App.ViewModels
 {
     public class SiteItemsViewModel : BaseViewModel
     {
+        public IDataStore<SiteItem> DataStore => DependencyService.Get<IDataStore<SiteItem>>() ?? new SiteDataStore();
         public ObservableCollection<SiteItem> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 

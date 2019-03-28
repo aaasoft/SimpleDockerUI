@@ -10,9 +10,9 @@ using SimpleDockerUI.App.Services;
 
 namespace SimpleDockerUI.App.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged,IDisposable
     {
-        public IDataStore<SiteItem> DataStore => DependencyService.Get<IDataStore<SiteItem>>() ?? new JsonDataStore();
+        public virtual void Dispose() { }
 
         bool isBusy = false;
         public bool IsBusy
