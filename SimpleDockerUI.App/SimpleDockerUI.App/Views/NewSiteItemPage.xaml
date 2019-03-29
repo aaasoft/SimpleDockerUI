@@ -21,7 +21,7 @@
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
-        <StackLayout Spacing="20" Padding="15">
+        <StackLayout Spacing="10" Padding="15">
             <Label Text="名称" FontSize="Medium" />
             <Entry Text="{Binding Item.Name}" FontSize="Small" />
             <Label Text="URL" FontSize="Medium" />

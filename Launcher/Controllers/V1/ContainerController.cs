@@ -15,7 +15,7 @@ namespace Launcher.Controllers.V1
     /// Apis about Container Controller
     /// </summary>
     [ApiVersion("1.0")]
-    [Route( "api/v{api-version:apiVersion}/[controller]" )]
+    [Route("api/v{api-version:apiVersion}/[controller]")]
     public class ContainerController : Controller
     {
         /// <summary>
@@ -112,6 +112,8 @@ namespace Launcher.Controllers.V1
         {
             try
             {
+                if (id.StartsWith(Environment.MachineName))
+                    return base.StatusCode(403, $"Can't operate SimpleDockerUI container.");
                 DockerClientUtils.UseDockerClient(client =>
                 {
                     client.Containers.RemoveContainerAsync(id, new ContainerRemoveParameters() { }).Wait();
@@ -135,6 +137,8 @@ namespace Launcher.Controllers.V1
         {
             try
             {
+                if (id.StartsWith(Environment.MachineName))
+                    return base.StatusCode(403, $"Can't operate SimpleDockerUI container.");
                 bool ret = false;
                 DockerClientUtils.UseDockerClient(client =>
                 {
@@ -161,6 +165,8 @@ namespace Launcher.Controllers.V1
         {
             try
             {
+                if (id.StartsWith(Environment.MachineName))
+                    return base.StatusCode(403, $"Can't operate SimpleDockerUI container.");
                 bool ret = false;
                 DockerClientUtils.UseDockerClient(client =>
                 {
