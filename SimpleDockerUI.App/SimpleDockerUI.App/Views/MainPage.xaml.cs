@@ -1,4 +1,5 @@
-﻿using SimpleDockerUI.App.Models;
+﻿using Plugin.Fingerprint;
+using SimpleDockerUI.App.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -46,6 +47,20 @@ namespace SimpleDockerUI.App.Views
 
                 IsPresented = false;
             }
+        }
+
+        private async void MasterDetailPage_Appearing(object sender, EventArgs e)
+        {
+            var fingerprint = Plugin.Fingerprint.CrossFingerprint.Current;
+
+            var isAvailable = await fingerprint.IsAvailableAsync(true);
+            if (!isAvailable)
+                return;
+
+            var result = await fingerprint.AuthenticateAsync("指纹验证");
+            if (result.Authenticated)
+                return;
+            this.IsVisible = false;
         }
     }
 }

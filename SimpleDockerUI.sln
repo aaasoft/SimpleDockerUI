@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDockerUI.App.Android"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDockerUI.App.iOS", "SimpleDockerUI.App\SimpleDockerUI.App.iOS\SimpleDockerUI.App.iOS.csproj", "{3E4F5251-C7AB-4A62-B6E9-05F84EC0B73C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDockerUI.App", "SimpleDockerUI.App\SimpleDockerUI.App\SimpleDockerUI.App.csproj", "{224280F5-DBB6-47C4-8242-4E1EB849C144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDockerUI.App", "SimpleDockerUI.App\SimpleDockerUI.App\SimpleDockerUI.App.csproj", "{224280F5-DBB6-47C4-8242-4E1EB849C144}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

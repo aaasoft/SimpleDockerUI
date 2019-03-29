@@ -8,6 +8,8 @@ using Android.Widget;
 using Android.OS;
 using Xamarin.Forms;
 using SimpleDockerUI.App.Utils;
+using Plugin.Fingerprint;
+using Plugin.CurrentActivity;
 
 namespace SimpleDockerUI.App.Droid
 {
@@ -19,8 +21,10 @@ namespace SimpleDockerUI.App.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            DependencyUtils.Init(this.GetType().Assembly);
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
 
+            DependencyUtils.Init(this.GetType().Assembly);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
