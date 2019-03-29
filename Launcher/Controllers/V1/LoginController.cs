@@ -26,12 +26,16 @@ namespace Launcher.Controllers.V1
             HunterUtils.TryHunt(this, Program.GlobalProperties);
         }
 
-        private string Password;
+        internal string Name;
+        internal string Password;
 
         void IPropertyHunter.Hunt(string key, string value)
         {
             switch (key)
             {
+                case nameof(Name):
+                    this.Name = value;
+                    break;
                 case nameof(Password):
                     this.Password = value;
                     break;

@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 
 using SimpleDockerUI.App.Models;
 using SimpleDockerUI.App.Services;
+using Newtonsoft.Json;
 
 namespace SimpleDockerUI.App.Views
 {
@@ -43,6 +44,33 @@ namespace SimpleDockerUI.App.Views
         async void Cancel_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();
+        }
+
+        private async void Scan_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+                var result = await scanner.Scan();
+
+                if (result != null)
+                {
+                    var content = result.Text;
+                    try
+                    {
+                        JsonConvert.PopulateObject(content, Item);
+                        OnPropertyChanged(nameof(Item));
+                    }
+                    catch
+                    {
+                        DependencyService.Get<IMessage>().ShortAlert("二维码数据不正确。");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DependencyService.Get<IMessage>().ShortAlert(ex.ToString());
+            }
         }
     }
 }

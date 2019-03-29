@@ -4,6 +4,13 @@
              x:Class="SimpleDockerUI.App.Views.NewSiteItemPage">
     
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="扫描二维码" Clicked="Scan_Clicked">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="UWP" Value="search.png"/>
+                </OnPlatform>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
         <ToolbarItem Text="取消" Clicked="Cancel_Clicked">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
