@@ -23,7 +23,6 @@ namespace SimpleDockerUI.App.Droid
 
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
-
             DependencyUtils.Init(this.GetType().Assembly);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

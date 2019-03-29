@@ -26,5 +26,12 @@ namespace SimpleDockerUI.App.Views
             viewModel = new DockerContainerItemDetailViewModel(siteItem, dockerContainerItem);
             BindingContext = viewModel;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            //刷新
+            viewModel.RefreshCommand.Execute(null);
+        }
     }
 }

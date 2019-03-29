@@ -12,8 +12,8 @@ using Android.Widget;
 using SimpleDockerUI.App;
 using SimpleDockerUI.App.Services;
 
-[assembly: Xamarin.Forms.Dependency(typeof(SimpleDockerUI.App.Droid.PlatformMessage))]
-namespace SimpleDockerUI.App.Droid
+[assembly: Xamarin.Forms.Dependency(typeof(SimpleDockerUI.App.Droid.PlatformImpl.PlatformMessage))]
+namespace SimpleDockerUI.App.Droid.PlatformImpl
 {
     public class PlatformMessage : IMessage
     {

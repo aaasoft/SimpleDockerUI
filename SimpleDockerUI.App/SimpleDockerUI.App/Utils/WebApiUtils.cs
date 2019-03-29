@@ -35,6 +35,14 @@ namespace SimpleDockerUI.App.Utils
             return items;
         }
 
+        public static async Task<DockerContainerItem> GetContainerInfo(HttpClient client, SiteItem siteItem, string id)
+        {
+            var url = siteItem.Url + "/api/v1/Container/" +id;
+            var content = await client.GetStringAsync(url);
+            var items = JsonConvert.DeserializeObject<DockerContainerItem>(content);
+            return items;
+        }
+
         public static async Task StartContainer(HttpClient client, SiteItem siteItem, DockerContainerItem dockerContainerItem)
         {
             var url = $"{siteItem.Url}/api/v1/Container/{dockerContainerItem.Id}/Start";

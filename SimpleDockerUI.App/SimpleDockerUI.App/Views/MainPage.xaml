@@ -2,13 +2,10 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:views="clr-namespace:SimpleDockerUI.App.Views"
-            x:Class="SimpleDockerUI.App.Views.MainPage"
-            Appearing="MasterDetailPage_Appearing">
-
+            x:Class="SimpleDockerUI.App.Views.MainPage">
     <MasterDetailPage.Master>
         <views:MenuPage />
     </MasterDetailPage.Master>
-
     <MasterDetailPage.Detail>
         <NavigationPage>
             <NavigationPage.Icon>

@@ -38,8 +38,8 @@ namespace SimpleDockerUI.App.Views
         {
             base.OnAppearing();
 
-            if (viewModel.Items.Count == 0)
-                viewModel.LoadItemsCommand.Execute(null);
+            //刷新
+            viewModel.LoadItemsCommand.Execute(null);
         }
     }
 }
