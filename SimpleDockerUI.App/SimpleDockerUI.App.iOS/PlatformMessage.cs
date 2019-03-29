@@ -7,10 +7,10 @@ using Foundation;
 using SimpleDockerUI.App.Services;
 using UIKit;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Message))]
+[assembly: Xamarin.Forms.Dependency(typeof(SimpleDockerUI.App.iOS.PlatformMessage))]
 namespace SimpleDockerUI.App.iOS
 {
-    public class Message : IMessage
+    public class PlatformMessage : IMessage
     {
         const double LONG_DELAY = 3.5;
         const double SHORT_DELAY = 2.0;

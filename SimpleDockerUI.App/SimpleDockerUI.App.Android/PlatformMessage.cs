@@ -9,12 +9,13 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using SimpleDockerUI.App;
 using SimpleDockerUI.App.Services;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Message))]
+[assembly: Xamarin.Forms.Dependency(typeof(SimpleDockerUI.App.Droid.PlatformMessage))]
 namespace SimpleDockerUI.App.Droid
 {
-    public class Message : IMessage
+    public class PlatformMessage : IMessage
     {
         public void LongAlert(string message)
         {
