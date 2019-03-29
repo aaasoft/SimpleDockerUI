@@ -44,7 +44,7 @@ namespace SimpleDockerUI.App.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                DependencyService.Get<IMessage>().LongAlert("获取容器列表失败，原因：" + ex.Message);
             }
             finally
             {

@@ -29,6 +29,7 @@ namespace SimpleDockerUI.App.ViewModels
                 var newItem = item as SiteItem;
                 Items.Add(newItem);
                 await DataStore.AddItemAsync(newItem);
+                DependencyService.Get<IMessage>().ShortAlert("添加站点成功");
             });
             MessagingCenter.Subscribe<NewSiteItemPage, SiteItem>(this, "UpdateItem", async (obj, item) =>
             {
@@ -36,6 +37,7 @@ namespace SimpleDockerUI.App.ViewModels
                 Items.Remove(Items.First(t => t.Id == newItem.Id));
                 Items.Add(newItem);
                 await DataStore.UpdateItemAsync(newItem);
+                DependencyService.Get<IMessage>().ShortAlert("更新站点成功");
             });
         }
 

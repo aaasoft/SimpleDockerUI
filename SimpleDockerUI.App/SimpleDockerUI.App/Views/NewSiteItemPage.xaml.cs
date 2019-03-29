@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using SimpleDockerUI.App.Models;
+using SimpleDockerUI.App.Services;
 
 namespace SimpleDockerUI.App.Views
 {
@@ -26,6 +27,12 @@ namespace SimpleDockerUI.App.Views
 
         async void Save_Clicked(object sender, EventArgs e)
         {
+            var checkResult = Item.Check();
+            if (!checkResult.IsSuccess)
+            {
+                DependencyService.Get<IMessage>().ShortAlert(checkResult.Message);
+                return;
+            }
             if (string.IsNullOrEmpty(Item.Id))
                 MessagingCenter.Send(this, "AddItem", Item);
             else
