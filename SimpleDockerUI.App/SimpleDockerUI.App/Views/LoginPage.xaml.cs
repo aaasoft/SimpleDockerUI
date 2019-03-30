@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleDockerUI.App.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,12 +36,18 @@ namespace SimpleDockerUI.App.Views
         {
             //进行指纹识别
             var result = await Plugin.Fingerprint.CrossFingerprint.Current.AuthenticateAsync("请验证指纹");
+            //如果取消
+            if (result.Status == Plugin.Fingerprint.Abstractions.FingerprintAuthenticationResultStatus.Canceled)
+                return;
             //认证成功，跳转到主页面
             if (result.Authenticated)
             {
                 App.Current.MainPage = new MainPage();
                 return;
             }
+            //如果有错误消息
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+                DependencyService.Get<IMessage>().LongAlert(result.ErrorMessage);
         }
     }
 }
