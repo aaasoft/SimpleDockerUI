@@ -34,7 +34,7 @@ namespace SimpleDockerUI.App.Views
         private async void FingerprintLoginButton_Clicked(object sender, EventArgs e)
         {
             //进行指纹识别
-            var result = await Plugin.Fingerprint.CrossFingerprint.Current.AuthenticateAsync("指纹验证");
+            var result = await Plugin.Fingerprint.CrossFingerprint.Current.AuthenticateAsync("请验证指纹");
             //认证成功，跳转到主页面
             if (result.Authenticated)
             {

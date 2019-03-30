@@ -23,6 +23,7 @@ namespace SimpleDockerUI.App.Droid
 
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
+            CrossFingerprint.SetDialogFragmentType<PlatformImpl.MyCustomDialogFragment>();
             DependencyUtils.Init(this.GetType().Assembly);
             base.OnCreate(savedInstanceState);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
