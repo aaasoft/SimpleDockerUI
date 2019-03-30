@@ -13,23 +13,12 @@ namespace SimpleDockerUI.App
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage();
+            MainPage = new LoginPage();
         }
 
-        protected override async void OnStart()
+        protected override void OnStart()
         {
-            var fingerprint = Plugin.Fingerprint.CrossFingerprint.Current;
-
-            var isAvailable = await fingerprint.IsAvailableAsync(true);
-            //如果指纹识别不可用，则返回
-            if (!isAvailable)
-                return;
-
-            //进行指纹识别
-            var result = await fingerprint.AuthenticateAsync("指纹验证");
-            if (result.Authenticated)
-                return;
-            DependencyService.Get<ILifeCycleManager>().Finish();
+            
         }
 
         protected override void OnSleep()
