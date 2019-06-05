@@ -91,7 +91,11 @@ namespace Launcher
             }});
             //支持静态文件
             app.UseStaticFiles();
-
+            //支持反射代理
+            app.UseForwardedHeaders(new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            });
             //支持API登录控制
             app.UseMiddleware<Launcher.Middleware.ApiLoginMiddleware>();
 
