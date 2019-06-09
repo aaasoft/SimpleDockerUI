@@ -1,5 +1,7 @@
 # SimpleDockerUI
 
+<a href="https://play.google.com/store/apps/details?id=com.github.aaasoft.SimpleDockerUI.App"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="75"></a>
+
 说明
 --------------------
 配置文件是web.properties
